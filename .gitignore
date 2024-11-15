@@ -1,0 +1,50 @@
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore Robot Framework output files
+output/
+log.html
+report.html
+output.xml
+*.png
+*.gif
+*.zip
+
+# Ignore Jupyter Notebook checkpoints (if using notebooks)
+.ipynb_checkpoints/
+
+# Ignore virtual environment directories
+venv/
+.env/
+.venv/
+
+# Ignore IDE/editor configuration files
+.vscode/
+.idea/
+
+# Ignore specific test data files
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+*.cover
+*.py,cover
+
+# Ignore robot test results from specific runs
+debug.log
+test-results/
+rerun_failed/
+robot*.xml
