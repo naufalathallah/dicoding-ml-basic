@@ -162,26 +162,4 @@ Berikut adalah **rekomendasi** tahapannya.
 """
 
 """
-Perbandingan Hasil Evaluasi Sebelum dan Setelah Tuning:
-
-Sebelum Tuning:
-Akurasi model mencapai 0.94, dengan nilai rata-rata Precision, Recall, dan F1-Score yang cukup tinggi untuk semua kelas.
-Setelah Tuning:
-Akurasi menurun menjadi 0.9325, meskipun perbedaan ini tidak signifikan. Penurunan ini dapat terjadi karena parameter tuning menghasilkan model yang lebih sederhana atau menghindari overfitting.
-Identifikasi Kelemahan Model:
-
-Precision atau Recall Rendah untuk Kelas Tertentu:
-Tidak ada kelas dengan Precision atau Recall yang sangat rendah, tetapi perbedaan kecil antara Precision (0.92) dan Recall (0.94) untuk kelas 0 menunjukkan ada ruang untuk perbaikan pada kelas ini.
-Overfitting atau Underfitting:
-Sebelum tuning, model menunjukkan potensi overfitting karena akurasi tinggi di data training (tidak disebutkan di sini). Setelah tuning, model tampaknya lebih teratur, meskipun akurasi sedikit menurun.
-Rekomendasi Tindakan Lanjutan:
-
-Pengumpulan Data Tambahan:
-Jika memungkinkan, kumpulkan data tambahan untuk memperbaiki generalisasi model, khususnya untuk kelas 0 yang menunjukkan sedikit ketidakseimbangan antara Precision dan Recall.
-Eksperimen dengan Algoritma Lain:
-Cobalah algoritma lain seperti Random Forest, Gradient Boosting, atau XGBoost, yang mungkin memberikan kinerja lebih baik untuk dataset ini.
-Pemrosesan Data dan Penyeimbangan Kelas:
-Analisis distribusi data untuk memastikan tidak ada ketidakseimbangan yang signifikan di antara kelas-kelas. Jika ada, pertimbangkan metode penyeimbangan seperti oversampling atau undersampling.
-Validasi yang Lebih Mendalam:
-Gunakan k-fold cross-validation untuk memastikan hasil evaluasi lebih konsisten.
 """
