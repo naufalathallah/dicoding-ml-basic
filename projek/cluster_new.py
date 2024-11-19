@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.decomposition import PCA
 
 file_path = 'Customers.csv'
 customers_data = pd.read_csv(file_path)
@@ -118,8 +119,6 @@ kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
 customers_data['Cluster'] = kmeans.fit_predict(X)
 
 # Visualisasi Hasil Clustering dalam 2D (menggunakan PCA untuk reduksi dimensi jika perlu)
-from sklearn.decomposition import PCA
-
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X)
 plt.figure(figsize=(10, 6))
