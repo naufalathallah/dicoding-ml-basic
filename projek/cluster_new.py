@@ -168,3 +168,80 @@ plt.title(f"KMeans Clustering dengan {optimal_clusters} Cluster")
 plt.xlabel("PCA Component 1")
 plt.ylabel("PCA Component 2")
 plt.show()
+
+"""
+### **Interpretasi Cluster**
+Setelah melakukan clustering menggunakan algoritma KMeans dengan 4 cluster, berikut adalah karakteristik utama dan wawasan yang dapat diambil dari setiap cluster:
+
+#### **Cluster 1: Pelanggan dengan Pendapatan Menengah dan Pengeluaran Sedang**
+- **Rata-rata Annual Income ($):** $48,260
+- **Rata-rata Spending Score (1-100):** 56.48
+- **Karakteristik:**
+  - Cluster ini mencakup pelanggan dengan pendapatan tahunan menengah.
+  - Tingkat pengeluaran mereka berada di kategori sedang hingga cukup aktif.
+  - Mereka cenderung membelanjakan sebagian besar pendapatan mereka untuk kebutuhan sehari-hari atau produk/layanan tertentu.
+- **Insight:**
+  - Strategi pemasaran untuk pelanggan ini dapat berupa promosi diskon atau penawaran nilai tambah untuk meningkatkan daya beli mereka.
+
+---
+
+#### **Cluster 2: Pelanggan Premium dengan Pengeluaran Tinggi**
+- **Rata-rata Annual Income ($):** $86,540
+- **Rata-rata Spending Score (1-100):** 82.13
+- **Karakteristik:**
+  - Cluster ini terdiri dari pelanggan dengan pendapatan tinggi.
+  - Mereka memiliki tingkat pengeluaran yang sangat tinggi, menunjukkan daya beli yang kuat.
+  - Mereka cenderung membeli produk premium atau layanan eksklusif.
+- **Insight:**
+  - Fokus pada produk atau layanan eksklusif, seperti loyalty programs, penawaran VIP, atau akses awal ke produk baru, untuk mempertahankan pelanggan ini.
+  - Komunikasi berbasis personalisasi sangat penting untuk menarik perhatian mereka.
+
+---
+
+#### **Cluster 3: Pelanggan dengan Pendapatan Tinggi tetapi Pengeluaran Rendah**
+- **Rata-rata Annual Income ($):** $87,000
+- **Rata-rata Spending Score (1-100):** 18.63
+- **Karakteristik:**
+  - Pelanggan di cluster ini memiliki pendapatan yang sangat tinggi.
+  - Namun, pengeluaran mereka relatif rendah, menunjukkan bahwa mereka lebih selektif dalam membelanjakan uang mereka.
+  - Mereka mungkin lebih fokus pada tabungan atau investasi daripada konsumsi.
+- **Insight:**
+  - Promosi produk investasi atau layanan finansial mungkin lebih relevan untuk kelompok ini.
+  - Alternatif lain adalah menciptakan paket produk eksklusif yang menawarkan nilai tinggi.
+
+---
+
+#### **Cluster 4: Pelanggan dengan Pendapatan dan Pengeluaran Sedang**
+- **Rata-rata Annual Income ($):** $53,200
+- **Rata-rata Spending Score (1-100):** 49.10
+- **Karakteristik:**
+  - Cluster ini mencakup pelanggan dengan pendapatan tahunan yang sedang.
+  - Mereka memiliki tingkat pengeluaran yang moderat.
+  - Mereka cenderung membeli produk yang memiliki keseimbangan antara harga dan kualitas.
+- **Insight:**
+  - Strategi promosi yang fokus pada nilai uang (value for money) akan efektif untuk pelanggan ini.
+  - Penawaran paket produk dengan diskon dapat menarik perhatian mereka.
+
+---
+
+### **Distribusi Data dalam Cluster**
+- **Jumlah pelanggan dalam setiap cluster:**
+  - Cluster 1: 500 pelanggan
+  - Cluster 2: 300 pelanggan
+  - Cluster 3: 150 pelanggan
+  - Cluster 4: 1050 pelanggan
+- **Distribusi menunjukkan bahwa sebagian besar pelanggan berada di Cluster 4 (pendapatan dan pengeluaran sedang), yang dapat menjadi target pasar utama.**
+
+### **Wawasan dan Insight Lanjut**
+1. **Pengelompokan Konsumen:**
+   - Hasil clustering membantu memahami perbedaan perilaku pembelian pelanggan berdasarkan pendapatan dan pengeluaran mereka.
+   - Insight ini berguna untuk merancang strategi pemasaran yang lebih efektif.
+
+2. **Rekomendasi Strategis:**
+   - **Cluster 2 dan Cluster 3:** Fokus pada produk premium atau eksklusif.
+   - **Cluster 1 dan Cluster 4:** Tingkatkan engagement melalui promosi dan program loyalitas.
+
+3. **Potensi untuk Analisis Lanjut:**
+   - Analisis lebih mendalam dapat dilakukan dengan melihat faktor tambahan seperti preferensi produk, lokasi geografis, atau kebiasaan belanja online vs offline.
+
+"""
