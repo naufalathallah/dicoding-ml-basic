@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.model_selection import ParameterGrid
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
 from sklearn.metrics import silhouette_score
@@ -80,6 +81,10 @@ z_scores = np.abs(customers_data[numerical_features].apply(lambda x: (x - x.mean
 outliers = z_scores > 3  # Deteksi outlier di luar 3 standard deviation
 customers_data = customers_data[~(outliers.any(axis=1))]  # Hapus outlier
 
+# Menambahkan Fitur Baru
+customers_data['Spending per Age'] = customers_data['Spending Score (1-100)'] / (customers_data['Age'] + 1)
+customers_data['Income per Experience'] = customers_data['Annual Income ($)'] / (customers_data['Work Experience'] + 1)
+
 # Menampilkan hasil preprocessing
 customers_data.reset_index(drop=True, inplace=True)
 print("\nPreprocessed Data Information:")
@@ -87,7 +92,7 @@ print(customers_data.info())
 
 # Reduksi Dimensi dengan PCA
 pca = PCA(n_components=2)
-X_pca = pca.fit_transform(customers_data[numerical_features])
+X_pca = pca.fit_transform(customers_data[numerical_features + ['Spending per Age', 'Income per Experience']])
 
 # Menentukan jumlah cluster yang optimal menggunakan metode Elbow (KMeans)
 inertia = []
@@ -118,10 +123,19 @@ plt.ylabel("Silhouette Score")
 plt.legend()
 plt.show()
 
-# DBSCAN
-dbscan = DBSCAN(eps=0.5, min_samples=5)
-dbscan_labels = dbscan.fit_predict(X_pca)
-dbscan_silhouette = silhouette_score(X_pca, dbscan_labels) if len(set(dbscan_labels)) > 1 else -1
+# Optimasi DBSCAN
+param_grid = {'eps': [0.3, 0.5, 0.7], 'min_samples': [3, 5, 7]}
+best_silhouette = -1
+best_params = None
+for params in ParameterGrid(param_grid):
+    dbscan = DBSCAN(eps=params['eps'], min_samples=params['min_samples'])
+    labels = dbscan.fit_predict(X_pca)
+    if len(set(labels)) > 1:
+        score = silhouette_score(X_pca, labels)
+        if score > best_silhouette:
+            best_silhouette = score
+            best_params = params
+print(f"Best DBSCAN params: {best_params}, Silhouette Score: {best_silhouette}")
 
 # Agglomerative Clustering
 agglo_silhouette_scores = []
@@ -134,7 +148,7 @@ for k in range_clusters:
 plt.figure(figsize=(12, 8))
 plt.plot(range_clusters, kmeans_silhouette_scores, marker='o', label='KMeans', linestyle='--')
 plt.plot(range_clusters, agglo_silhouette_scores, marker='s', label='Agglomerative', linestyle='--')
-plt.axhline(y=dbscan_silhouette, color='r', linestyle='-', label='DBSCAN')
+plt.axhline(y=best_silhouette, color='r', linestyle='-', label=f'DBSCAN: {best_silhouette:.2f}')
 plt.title("Silhouette Scores untuk Berbagai Algoritma")
 plt.xlabel("Jumlah Cluster")
 plt.ylabel("Silhouette Score")
