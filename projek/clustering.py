@@ -6,13 +6,13 @@ Pada tahap ini, Anda perlu mengimpor beberapa pustaka (library) Python yang dibu
 
 #Type your code here
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
+from sklearn.model_selection import ParameterGrid
 
 """# **3. Memuat Dataset**
 
@@ -22,11 +22,9 @@ Jika dataset berada di Google Drive, pastikan Anda menghubungkan Google Drive ke
 """
 
 #Type your code here
-pd.options.display.max_columns = None
 file_path = 'Customers.csv'
 df = pd.read_csv(file_path)
 
-# Lihat informasi awal dataset
 print(df.head())
 print(df.info())
 
@@ -137,21 +135,20 @@ Pada tahap ini, Anda membangun model clustering dengan memilih algoritma yang se
 """
 
 #Type your code here
-from sklearn.model_selection import ParameterGrid
-
-# Mencari parameter optimal untuk KMeans
+# Parameter Grid Search untuk KMeans
 param_grid = {
-    'n_clusters': range(2, 16),  # Range jumlah klaster
-    'init': ['k-means++', 'random'],  # Metode inisialisasi
-    'n_init': [10, 20],  # Iterasi inisialisasi
+    'n_clusters': range(2, 16),
+    'init': ['k-means++', 'random'],
+    'n_init': [10, 20],
     'random_state': [42]
 }
 
+# Cari parameter terbaik berdasarkan Silhouette Score
 best_score = -1
 best_params = None
 for params in ParameterGrid(param_grid):
     kmeans = KMeans(**params)
-    kmeans.fit(scaled_selected_df)  # Gunakan scaled_selected_df jika feature selection diterapkan
+    kmeans.fit(scaled_selected_df)
     score = silhouette_score(scaled_selected_df, kmeans.labels_)
     if score > best_score:
         best_score = score
@@ -159,27 +156,14 @@ for params in ParameterGrid(param_grid):
 
 print(f"Best Silhouette Score: {best_score} with params: {best_params}")
 
-# Inisialisasi KMeans dengan parameter terbaik
 kmeans = KMeans(**best_params)
 kmeans.fit(scaled_selected_df)
 df['Cluster'] = kmeans.labels_
 
-# Pilih jumlah klaster terbaik berdasarkan Silhouette Score
-optimal_k = 14  # Silhouette tertinggi
-kmeans = KMeans(n_clusters=optimal_k, random_state=42, n_init=10)
-kmeans.fit(scaled_selected_df)
-
-# Tambahkan label klaster ke dataset asli
-df['Cluster'] = kmeans.labels_
-
-# Kurangi dimensi menjadi 2 untuk PCA
 pca = PCA(n_components=2)
 scaled_df_pca = pca.fit_transform(scaled_selected_df)
 
-# Clustering dengan data hasil PCA
-kmeans_pca = KMeans(n_clusters=optimal_k, random_state=42, n_init=10)
-kmeans_pca.fit(scaled_df_pca)
-silhouette_pca = silhouette_score(scaled_df_pca, kmeans_pca.labels_)
+silhouette_pca = silhouette_score(scaled_df_pca, kmeans.labels_)
 print(f"Silhouette Score setelah PCA: {silhouette_pca}")
 
 """## **b. Evaluasi Model Clustering**
@@ -192,6 +176,43 @@ Metode ini membantu kita menemukan jumlah cluster yang memberikan pemisahan terb
 """
 
 #Type your code here
+# Perhitungan Elbow Method
+wcss = []  # List untuk menyimpan nilai WCSS
+range_n_clusters = range(1, 11)  # Rentang jumlah cluster
+
+for n_clusters in range_n_clusters:
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    kmeans.fit(scaled_selected_df)
+    wcss.append(kmeans.inertia_)
+
+# Visualisasi Elbow Method
+plt.figure(figsize=(8, 6))
+plt.plot(range_n_clusters, wcss, marker='o', linestyle='--')
+plt.title('Elbow Method')
+plt.xlabel('Number of Clusters')
+plt.ylabel('WCSS')
+plt.show()
+
+# Evaluasi model untuk berbagai jumlah cluster menggunakan Silhouette Score
+silhouette_scores = []
+
+for n_clusters in range(2, 11):  # Mulai dari 2 karena silhouette tidak terdefinisi untuk 1 cluster
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    clusters = kmeans.fit_predict(scaled_selected_df)
+    score = silhouette_score(scaled_selected_df, clusters)
+    silhouette_scores.append(score)
+
+# Visualisasi Silhouette Score untuk berbagai jumlah cluster
+plt.figure(figsize=(8, 6))
+plt.plot(range(2, 11), silhouette_scores, marker='o', linestyle='--')
+plt.title('Silhouette Scores for Different Number of Clusters')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Silhouette Score')
+plt.show()
+
+# Tentukan jumlah cluster dengan Silhouette Score tertinggi
+optimal_silhouette_clusters = range(2, 11)[silhouette_scores.index(max(silhouette_scores))]
+print(f'Jumlah cluster optimal berdasarkan Silhouette Score: {optimal_silhouette_clusters}')
 
 """## **c. Feature Selection (Opsional)**
 
@@ -209,14 +230,6 @@ Berikut adalah **rekomendasi** tahapannya.
 """
 
 #Type your code here
-plt.figure(figsize=(8, 6))
-sns.scatterplot(x=scaled_df_pca[:, 0], y=scaled_df_pca[:, 1], hue=kmeans_pca.labels_, palette='viridis', s=50)
-plt.title('Clustering Results with PCA')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.legend(title='Cluster')
-plt.show()
-
 """## **e. Analisis dan Interpretasi Hasil Cluster**
 
 Setelah melakukan clustering, langkah selanjutnya adalah menganalisis karakteristik dari masing-masing cluster berdasarkan fitur yang tersedia.
@@ -227,12 +240,6 @@ Berikut adalah **rekomendasi** tahapannya.
 """
 
 #Type your code here
-# Analisis karakteristik setiap cluster
-for cluster in range(optimal_k):
-    print(f'Cluster {cluster}:')
-    cluster_data = df[df['Cluster'] == cluster]
-    print(cluster_data.describe())
-    print()
 
 """Tulis hasil interpretasinya di sini.
 1. Cluster 1: Pelanggan dengan pendapatan rendah hingga menengah dan pengeluaran tinggi.
