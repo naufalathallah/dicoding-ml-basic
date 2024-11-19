@@ -169,6 +169,12 @@ plt.xlabel("PCA Component 1")
 plt.ylabel("PCA Component 2")
 plt.show()
 
+# Mengeksport Data
+output_file_path = 'clustered_data.csv'
+customers_data.to_csv(output_file_path, index=False)
+
+print(f"Hasil clustering telah dieksport ke file: {output_file_path}")
+
 """
 ### **Interpretasi Cluster**
 Setelah melakukan clustering menggunakan algoritma KMeans dengan 4 cluster, berikut adalah karakteristik utama dan wawasan yang dapat diambil dari setiap cluster:
